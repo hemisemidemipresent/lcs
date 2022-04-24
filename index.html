@@ -16,10 +16,21 @@
             width: 960px;
             /* 960 = 30 imgs * 32px*/
         }
+
+        #play,
+        #body {
+            visibility: hidden;
+        }
+
+        body {
+            background-color: #888;
+        }
     </style>
 </head>
 
 <body>
+    <button id="download" onclick="download()">Download a few MB</button>
+    <button id="play" onclick="play()">Play</button>
     <div id="body"></div>
 
 </body>
