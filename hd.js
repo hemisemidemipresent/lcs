@@ -14,7 +14,7 @@ function makeImgs() {
 }
 function download() {
     axios
-        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/lcs-hd.txt')
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-hd.txt')
         .then(function (response) {
             data = response.data;
         })
@@ -36,6 +36,7 @@ let lastFrameTime = 0; // the last frame time
 let frame = 0;
 
 function nextFrame(time) {
+    console.log(frame);
     if (time - lastFrameTime < FRAME_MIN_TIME) {
         //skip the frame if the call is too early
         requestAnimationFrame(nextFrame);
