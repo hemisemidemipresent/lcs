@@ -15,7 +15,7 @@ function makeImgs() {
 }
 function download() {
     axios
-        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-new.txt')
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-15fps.txt')
         .then(function (response) {
             data = response.data;
         })
@@ -56,7 +56,7 @@ function nextFrame(time) {
         if (framedata[i] > 200) image.src = './assets/LCI.png';
         else image.src = './assets/LCS.png';
     }
-    frame += 2;
+    frame++;
 
     requestAnimationFrame(nextFrame); // get next farme
 }
