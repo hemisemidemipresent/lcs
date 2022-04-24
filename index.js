@@ -53,8 +53,8 @@ function nextFrame(time) {
     }
     for (let i = 0; i < framedata.length; i++) {
         let image = imgs[i];
-        if (framedata[i] > 200) image.src = './assets/LCI.png';
-        else image.src = './assets/LCS.png';
+        if (framedata[i] > 200 && image.src != 'assets/LCI.png') image.src = 'assets/LCI.png';
+        else if (framedata[i] <= 200 && image.src != 'assets/LCS.png') image.src = 'assets/LCS.png';
     }
     frame++;
 
