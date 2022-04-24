@@ -1,21 +1,44 @@
 let data;
-let imgs = makeImgs();
 let video = document.getElementById('video');
+const imageSize = 32;
+const pixelWidth = 30, pixelHeight = 23;
+
+let lcs = new Image(), lci = new Image();
+let lcsScaled, lciScaled;
+let ctx = null;
+lcs.src = "assets/LCS.png";
+lci.src = "assets/LCI.png";
+
+lcs.onload = function () {
+    lcsScaled = document.createElement('canvas');
+    lcsScaled.width = imageSize;
+    lcsScaled.height = imageSize;
+    lcsScaled.getContext('2d').drawImage(lcs, 0, 0, imageSize, imageSize);
+    makeImgs();
+}
+
+lci.onload = function () {
+    lciScaled = document.createElement('canvas');
+    lciScaled.width = imageSize;
+    lciScaled.height = imageSize;
+    lciScaled.getContext('2d').drawImage(lci, 0, 0, imageSize, imageSize);
+}
+
 function makeImgs() {
-    let imgs = [];
-    for (let x = 0; x < 30; x++) {
-        for (let y = 0; y < 23; y++) {
-            let img = document.createElement('img');
-            img.src = './assets/LCS.png';
-            body.appendChild(img);
-            imgs.push(img);
+    let canvas = document.createElement('canvas')
+    canvas.width = pixelWidth * imageSize;
+    canvas.height = pixelHeight * imageSize;
+    ctx = canvas.getContext("2d")
+    for (let x = 0; x < pixelWidth; x++) {
+        for (let y = 0; y < pixelHeight; y++) {
+            ctx.drawImage(lcsScaled, x * imageSize, y * imageSize);
         }
     }
-    return imgs;
+    body.appendChild(canvas);
 }
 function download() {
     axios
-        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-15fps.txt')
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-new.txt')
         .then(function (response) {
             data = response.data;
         })
@@ -29,13 +52,16 @@ function download() {
         });
 }
 
-const FRAMES_PER_SECOND = 15; // Valid values are 60,30,20,15,10...
+const FRAME_SKIP = 1;
+const FRAMES_PER_SECOND = 30; // Valid values are 60,30,20,15,10...
+// 6x slower than normal
 // set the mim time to render the next frame
-const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
+const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.005;
 let lastFrameTime = 0; // the last frame time
 let frame = 0;
 
 function nextFrame(time) {
+    console.log(frame);
     if (time - lastFrameTime < FRAME_MIN_TIME) {
         //skip the frame if the call is too early
         requestAnimationFrame(nextFrame);
@@ -45,20 +71,24 @@ function nextFrame(time) {
 
     // render the frame
 
-    let framedata = data[frame];
-    if (!framedata) {
-        frame = 0;
-        document.getElementById('play').style.visibility = 'visible';
-        return;
+    let cFrameData = data[frame];
+    let lFrameData = frame > FRAME_SKIP ? data[frame - FRAME_SKIP] : null;
+    for (let i = 0; i < cFrameData.length; i++) {
+        if ((lFrameData == null && cFrameData[i] < 200) || cFrameData[i] === lFrameData[i]) continue;
+        let x = i % pixelWidth;
+        let y = Math.floor(i / pixelWidth);
+        ctx.clearRect(x * imageSize, y * imageSize, imageSize, imageSize);
+        if (cFrameData[i] > 200) {
+            // draw LCI
+            ctx.drawImage(lciScaled, x * imageSize, y * imageSize);
+        } else {
+            // draw LCS
+            ctx.drawImage(lcsScaled, x * imageSize, y * imageSize);
+        }
     }
-    for (let i = 0; i < framedata.length; i++) {
-        let image = imgs[i];
-        if (framedata[i] > 200 && image.src != 'assets/LCI.png') image.src = 'assets/LCI.png';
-        else if (framedata[i] <= 200 && image.src != 'assets/LCS.png') image.src = 'assets/LCS.png';
-    }
-    frame++;
+    frame += FRAME_SKIP;
 
-    requestAnimationFrame(nextFrame); // get next farme
+    requestAnimationFrame(nextFrame); // get next frame
 }
 function play() {
     document.getElementById('play').style.visibility = 'hidden';
