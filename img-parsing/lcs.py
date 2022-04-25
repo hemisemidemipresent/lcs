@@ -9,6 +9,7 @@ NO_FRAMES = 6572
 def main():
     with open("gen.txt","r") as f:
         for line in f:
+            line = line.strip()
             name, width, height, idx_file = line.split(",")
             print(f"Generating {name}...")
             do_conversion(
