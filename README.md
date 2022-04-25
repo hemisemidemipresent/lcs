@@ -10,4 +10,10 @@
 
 each `LCX` occupies 16px
 
-## Data
+## Websites
+
+[normal ver](https://hemisemidemipresent.github.io/lcs/)
+
+[hd ver](https://hemisemidemipresent.github.io/lcs/hd)
+
+[uhd ver](https://hemisemidemipresent.github.io/lcs/uhd)
