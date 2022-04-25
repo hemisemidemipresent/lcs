@@ -55,7 +55,7 @@ function download() {
 }
 
 const FRAME_SKIP = 1;
-const FRAMES_PER_SECOND = 30; // Valid values are 60,30,20,15,10...
+const FRAMES_PER_SECOND = 15; // Valid values are 60,30,20,15,10...
 // 6x slower than normal
 // set the mim time to render the next frame
 const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
