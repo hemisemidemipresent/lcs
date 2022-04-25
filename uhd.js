@@ -1,8 +1,8 @@
 let data;
 let video = document.getElementById('video');
-const imageSize = 16;
-const pixelWidth = 60,
-    pixelHeight = 46;
+const imageSize = 8;
+const pixelWidth = 120,
+    pixelHeight = 92;
 
 let lcs = new Image(),
     lci = new Image();
@@ -40,7 +40,7 @@ function makeImgs() {
 }
 function download() {
     axios
-        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-hd.txt')
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-uhd.txt')
         .then(function (response) {
             data = response.data;
         })

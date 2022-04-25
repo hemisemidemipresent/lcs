@@ -56,10 +56,11 @@ function download() {
 
 const FRAME_SKIP = 1;
 const FRAMES_PER_SECOND = 30; // Valid values are 60,30,20,15,10...
+// 6x slower than normal
 // set the mim time to render the next frame
-const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.005;
+const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
 let lastFrameTime = 0; // the last frame time
-let frame = 10;
+let frame = 0;
 
 function nextFrame(time) {
     if (time - lastFrameTime < FRAME_MIN_TIME) {
@@ -93,5 +94,5 @@ function nextFrame(time) {
 function play() {
     document.getElementById('play').style.visibility = 'hidden';
     window.requestAnimationFrame(nextFrame);
-    //video.play();
+    video.play();
 }

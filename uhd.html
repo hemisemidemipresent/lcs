@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bad Apple ft Mr Lim(s) [HD]</title>
+    <style>
+        img {
+            width: 16px;
+            height: 16px;
+            padding: 0;
+            margin: 0;
+        }
+
+        #body {
+            /* width: 960px; */
+            /* 960 = 30 imgs * 32px*/
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        #play,
+        #body {
+            visibility: hidden;
+        }
+
+        body {
+            background-color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="download" onclick="download()">Download a few MB</button>
+    <button id="play" onclick="play()">Play</button>
+    <p>Note that this more HD one is intentionally 6x slower to ensure even frame rate since updating 2760 images 30
+        times per second is not something most devices can handle</p>
+    <div id="body"></div>
+    <video id="video">
+        <source src="./assets/【東方】Bad Apple!! ＰＶ【影絵】.mp4" type="video/mp4">
+    </video>
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script src="hd.js"></script>
+
+</html>
