@@ -40,7 +40,7 @@ function makeImgs() {
 }
 function download() {
     axios
-        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-new.txt')
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs.txt')
         .then(function (response) {
             data = response.data;
         })
@@ -54,26 +54,30 @@ function download() {
         });
 }
 
-const FRAME_SKIP = 1;
+let FRAME_SKIP = 1;
 const FRAMES_PER_SECOND = 30; // Valid values are 60,30,20,15,10...
 // 6x slower than normal
-// set the mim time to render the next frame
-const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
 let lastFrameTime = 0; // the last frame time
+let lastFrame = -1;
 let frame = 0;
 
 function nextFrame(time) {
-    if (time - lastFrameTime < FRAME_MIN_TIME) {
+    let videoframe = video.currentTime * FRAMES_PER_SECOND;
+    console.log(frame - videoframe);
+    if (videoframe > frame + 0.5) {
+        frame = Math.ceil(videoframe);
+    } else {
         //skip the frame if the call is too early
         requestAnimationFrame(nextFrame);
         return; // return as there is nothing to do
     }
+
     lastFrameTime = time; // remember the time of the rendered frame
 
     // render the frame
 
     let cFrameData = data[frame];
-    let lFrameData = frame > FRAME_SKIP ? data[frame - FRAME_SKIP] : null;
+    let lFrameData = lastFrame > -1 ? data[lastFrame] : null;
     for (let i = 0; i < cFrameData.length; i++) {
         if ((lFrameData == null && cFrameData[i] < 200) || cFrameData[i] === lFrameData[i]) continue;
         let x = i % pixelWidth;
@@ -87,12 +91,13 @@ function nextFrame(time) {
             ctx.drawImage(lcsScaled, x * imageSize, y * imageSize);
         }
     }
+    lastFrame = frame;
     frame += FRAME_SKIP;
 
     requestAnimationFrame(nextFrame); // get next frame
 }
 function play() {
     document.getElementById('play').style.visibility = 'hidden';
-    window.requestAnimationFrame(nextFrame);
     video.play();
+    window.requestAnimationFrame(nextFrame);
 }
