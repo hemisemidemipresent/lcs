@@ -80,7 +80,7 @@ function nextFrame(time) {
         let x = i % pixelWidth;
         let y = Math.floor(i / pixelWidth);
         ctx.clearRect(x * imageSize, y * imageSize, imageSize, imageSize);
-        if (cFrameData[i] > 200) {
+        if (cFrameData[i]) {
             // draw LCI
             ctx.drawImage(lciScaled, x * imageSize, y * imageSize);
         } else {
