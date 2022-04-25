@@ -1,34 +1,73 @@
-from multiprocessing.sharedctypes import Value
-from manim import *
-from numpy import *
-from math import *
-class LCS(Scene):
+from PIL import Image
+from tqdm import tqdm # progressbar package
 
-    def construct(self):
-        n=4
-        ce = int(16/n)
-        ne = int(8/n)
-        arr = []
-        for i in range(1,6575,2): # start = 1; stop = 6575 (there are that many frames); step = 2 (we want a 15fps, so we set step = 30/15)
-            numstr = str(i).zfill(5) #yeah
-            path = "C:/Users/path...to.../bad apple/scene"+numstr+".png"
-            img = ImageMobject(path)
-            # print(len(img.pixel_array))
-            # print(len(img.pixel_array[0]))
-            r = []
+VID_WIDTH = 480
+VID_HEIGHT = 360
 
-            for y in range(23*n):
-                for x in range(30*n):#30*2
-                    px = img.pixel_array[y * ce + ne][x * ce + ne][0]#x*8=16/2 + 4 = (16/2)/2
-                    # 1 = white; 0 = black. We set the dividing line at 200/255
-                    if(px>200):
-                        px = 1
-                    else:
-                        px = 0
-                    r.append(px)
-            arr.append(r)
-        f = open("lcs.txt","w")
-        f.write(str(arr).replace(" ",""))
-        f.close()
+NO_FRAMES = 6572
 
+def main():
+    with open("gen.txt","r") as f:
+        for line in f:
+            name, width, height, idx_file = line.split(",")
+            print(f"Generating {name}...")
+            do_conversion(
+                name,
+                int(width),
+                int(height),
+                idx_file
+            )
+            print(f"Generated {name} successfully")
+
+def do_conversion(file_name, pixel_width, pixel_height, idx_file):
+    scale_width = VID_WIDTH / pixel_width
+    scale_height = VID_HEIGHT / pixel_height
+    idx = 0
+
+    with open(file_name,"wb") as f:
+        with open(idx_file,"w") as idx_f:
+            idx_f.write(str(NO_FRAMES) + ",")
+
+            for i in tqdm(range(1, NO_FRAMES + 1)):
+                numstr = str(i).zfill(5)
+
+                path = "../frames/scene-"+numstr+".png"
+                img = Image.open(path)
+                r = []
+
+                idx_f.write(str(idx) + ",")
+
+                for py in range(pixel_height):
+                    for px in range(pixel_width):
+                        vx = int(round((px + 0.5) * scale_width))
+                        vy = int(round((py + 0.5) * scale_height))
+                        val = img.getpixel((vx, vy))[0]
+                        r.append(val > 150)
+
+                comp = compress(r)
+                idx += len(comp)
+                f.write(comp)
+
+def compress(pixels):
+    # we will use a scheme as follows.
+    # first bit: 1 or 0
+    # bit 2 - 7: no. of that bit that follows.
+    # much smaller by exploiting runs
+    idx = 0
+    compressed = b""
+    while (idx < len(pixels)):
+        run_length = 1
+        pixel = pixels[idx]
+        while (idx + 1 < len(pixels) and pixels[idx + 1] == pixel):
+            run_length += 1
+            idx += 1
+        while (run_length > 0):
+            compressed += ((pixel << 7) + min(127, run_length)).to_bytes(1, 'big')
+            run_length -= 127
+        idx += 1
+    return compressed
+
+
+if __name__ == "__main__":
+    main()
         

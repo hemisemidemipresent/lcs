@@ -1,0 +1,4 @@
+lcs.bin,30,23,lcs-idx.csv
+lcs-hd.bin,60,46,lcs-hd-idx.csv
+lcs-uhd.bin,120,92,lcs-uhd-idx.csv
+lcs-uuhd.bin,240,184,lcs-uuhd-idx.csv
