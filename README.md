@@ -17,3 +17,5 @@ each `LCX` occupies 16px
 [hd ver](https://hemisemidemipresent.github.io/lcs/hd)
 
 [uhd ver](https://hemisemidemipresent.github.io/lcs/uhd)
+
+[uuhd ver](https://hemisemidemipresent.github.io/lcs/uuhd)
