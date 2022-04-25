@@ -1,4 +1,4 @@
-let data;
+let data, frameStart;
 let video = document.getElementById('video');
 const imageSize = 12;
 const pixelWidth = 120,
@@ -26,6 +26,8 @@ lci.onload = function () {
     lciScaled.getContext('2d').drawImage(lci, 0, 0, imageSize, imageSize);
 };
 
+const AMOUNT_MASK = 0b01111111
+
 function makeImgs() {
     let canvas = document.createElement('canvas');
     canvas.width = pixelWidth * imageSize;
@@ -38,11 +40,22 @@ function makeImgs() {
     }
     body.appendChild(canvas);
 }
+
 function download() {
     axios
-        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-uhd.txt')
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-uhd-idx.csv')
         .then(function (response) {
-            data = response.data;
+            frameStart = response.data.split(',');
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
+    axios
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-uhd.bin',
+            {responseType: 'arraybuffer'})
+        .then(function (response) {
+            data = new Uint8Array(response.data);
         })
         .catch(function (error) {
             console.log(error);
@@ -55,17 +68,15 @@ function download() {
 }
 
 let FRAME_SKIP = 1;
-const FRAMES_PER_SECOND = 15; // Valid values are 60,30,20,15,10...
-// 6x slower than normal
+const FRAMES_PER_SECOND = 30; // Valid values are 60,30,20,15,10...
 let lastFrameTime = 0; // the last frame time
-let lastFrame = -1;
+let cFrameData = null, lFrameData = null;
 let frame = 0;
 
 function nextFrame(time) {
-    let videoframe = video.currentTime * FRAMES_PER_SECOND;
-    console.log(frame - videoframe);
-    if (videoframe > frame + 0.5) {
-        frame = Math.ceil(videoframe);
+    let videoFrame = video.currentTime * FRAMES_PER_SECOND;
+    if (videoFrame > frame + 0.5) {
+        frame = Math.min(frameStart[0], Math.ceil(videoFrame));
     } else {
         //skip the frame if the call is too early
         requestAnimationFrame(nextFrame);
@@ -74,10 +85,22 @@ function nextFrame(time) {
 
     lastFrameTime = time; // remember the time of the rendered frame
 
-    // render the frame
+    // construct the frame
+    let pixels = 0;
+    let idx = frameStart[frame + 1];
+    cFrameData = [];
+    while (pixels !== pixelWidth * pixelHeight) {
+        let runData = data[idx];
+        let pixel = runData >> 7;
+        let amount = runData & AMOUNT_MASK;
+        for (let i = 0; i < amount; i++) {
+            cFrameData.push(pixel);
+        }
+        pixels += amount;
+        idx++;
+    }
 
-    let cFrameData = data[frame];
-    let lFrameData = lastFrame > -1 ? data[lastFrame] : null;
+    // render the frame
     for (let i = 0; i < cFrameData.length; i++) {
         if ((lFrameData == null && cFrameData[i] < 200) || cFrameData[i] === lFrameData[i]) continue;
         let x = i % pixelWidth;
@@ -91,11 +114,12 @@ function nextFrame(time) {
             ctx.drawImage(lcsScaled, x * imageSize, y * imageSize);
         }
     }
-    lastFrame = frame;
+    lFrameData = cFrameData;
     frame += FRAME_SKIP;
 
     requestAnimationFrame(nextFrame); // get next frame
 }
+
 function play() {
     document.getElementById('play').style.visibility = 'hidden';
     video.play();
