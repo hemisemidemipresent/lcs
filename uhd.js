@@ -1,6 +1,6 @@
 let data;
 let video = document.getElementById('video');
-const imageSize = 8;
+const imageSize = 12;
 const pixelWidth = 120,
     pixelHeight = 92;
 
@@ -63,7 +63,6 @@ let lastFrameTime = 0; // the last frame time
 let frame = 0;
 
 function nextFrame(time) {
-    console.log(frame);
     if (time - lastFrameTime < FRAME_MIN_TIME) {
         //skip the frame if the call is too early
         requestAnimationFrame(nextFrame);
