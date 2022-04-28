@@ -2,46 +2,50 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bad Apple ft Mr Lim(s) [HD]</title>
-  <style>
-    img {
-      width: 16px;
-      height: 16px;
-      padding: 0;
-      margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bad Apple ft Mr Lim(s) [HD]</title>
+    <style>
+        img {
+            width: 16px;
+            height: 16px;
+            padding: 0;
+            margin: 0;
+        }
 
-    #body {
-      /* width: 960px; */
-      /* 960 = 30 imgs * 32px*/
-      padding: 0;
-      margin: 0;
-      display: flex;
-      align-content: flex-start;
-      flex-wrap: wrap;
-    }
+        #body {
+            /* width: 960px; */
+            /* 960 = 30 imgs * 32px*/
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-content: flex-start;
+            flex-wrap: wrap;
+        }
 
-    #play,
-    #body {
-      visibility: hidden;
-    }
+        #play,
+        #body {
+            visibility: hidden;
+        }
 
-    body {
-      background-color: #888;
-    }
-  </style>
+        body {
+            background-color: #888;
+        }
+    </style>
 </head>
 
 <body>
-  <button id="download" onclick="download()">Download a few MB</button>
-  <button id="play" onclick="play()">Play</button>
-  <div id="body"></div>
-  <video id="video">
-    <source src="./assets/【東方】Bad Apple!! ＰＶ【影絵】.mp4" type="video/mp4">
-  </video>
+    <button id="download" onclick="download()">Download a few MB of data to load it</button>
+    <button id="play" onclick="play()">Play</button>
+    <div id="body"></div>
+    <video id="video">
+        <source src="./assets/【東方】Bad Apple!! ＰＶ【影絵】.mp4" type="video/mp4">
+    </video>
+    <a href="./index.html">Normal version</a>
+    <a href="./hd.html">HD version</a>
+    <a href="./uhd.html">UHD version</a>
+    <a href="./uuhd.html">UUHD version</a>
 </body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
