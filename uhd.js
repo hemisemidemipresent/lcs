@@ -26,7 +26,7 @@ lci.onload = function () {
     lciScaled.getContext('2d').drawImage(lci, 0, 0, imageSize, imageSize);
 };
 
-const AMOUNT_MASK = 0b01111111
+const AMOUNT_MASK = 0b01111111;
 
 function makeImgs() {
     let canvas = document.createElement('canvas');
@@ -49,11 +49,12 @@ function download() {
         })
         .catch(function (error) {
             console.log(error);
-        })
+        });
 
     axios
-        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-uhd.bin',
-            {responseType: 'arraybuffer'})
+        .get('https://raw.githubusercontent.com/hemisemidemipresent/lcs/main/data/lcs-uhd.bin', {
+            responseType: 'arraybuffer'
+        })
         .then(function (response) {
             data = new Uint8Array(response.data);
         })
@@ -64,13 +65,15 @@ function download() {
             document.getElementById('download').style.visibility = 'hidden';
             document.getElementById('play').style.visibility = 'visible';
             document.getElementById('body').style.visibility = 'visible';
+            document.getElementById('video').style.visibility = 'visible';
         });
 }
 
 let FRAME_SKIP = 1;
 const FRAMES_PER_SECOND = 30; // Valid values are 60,30,20,15,10...
 let lastFrameTime = 0; // the last frame time
-let cFrameData = null, lFrameData = null;
+let cFrameData = null,
+    lFrameData = null;
 let frame = 0;
 
 function nextFrame(time) {

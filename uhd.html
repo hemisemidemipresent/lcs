@@ -25,12 +25,22 @@
         }
 
         #play,
-        #body {
+        #body,
+        #video {
             visibility: hidden;
         }
 
         body {
             background-color: #888;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            background-color: #fff;
+            border-radius: 1em;
         }
     </style>
 </head>
@@ -42,9 +52,13 @@
     <video id="video">
         <source src="./assets/【東方】Bad Apple!! ＰＶ【影絵】.mp4" type="video/mp4">
     </video>
+    <br>
     <a href="./index.html">Normal version</a>
+    <br>
     <a href="./hd.html">HD version</a>
+    <br>
     <a href="./uhd.html">UHD version</a>
+    <br>
     <a href="./uuhd.html">UUHD version</a>
 </body>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
